@@ -17,6 +17,9 @@
 //=============================================================================================================================================
 //=============================================================================================================================================
 
+//System Preferences
+#define SYSTEM_ID 0x01
+
 /*  Teensy 3.5/3.6 pin connections:
      ------------------------------------------------------------------------------------------------------------------------------------------
      Component                    | Pins used         
@@ -74,13 +77,15 @@
 #define SPS_BAUD 115200
 #define UBLOX_BAUD 9600
 
+//Data Transfer
+#define BEGIN 0x42
+#define STOP  0x53
+
 //Values
 #define MINUTES_TO_MILLIS 60000                                         //MATH TIME
 #define PSI_TO_ATM  0.068046                                            //Pounds per square inch to atmospheres   
 #define C2K 273.15                                                      //Degrees Celsius to Kelvin
 #define DC_JUMPER 1                                                     //The DC_JUMPER is the I2C Address Select jumper. Set to 1 if the jumper is open (Default), or set to 0 if it's closed.
-#define START 0x42                                                      //The start, or beginning byte
-#define STOP 0x53                                                       //The ending, or stop byte
 #define NoFix 0x00
 #define Fix 0x01
 
@@ -93,27 +98,38 @@
 ////////////////////////
 //////////Data//////////
 ////////////////////////
-struct gpsData{
-  uint16_t hours,minutes,seconds;
-  uint8_t dd, mm, yyyy;
-  unsigned int fixAge;
-  uint8_t sats;
-  float latitude, longitude, alt;
-}locationData;
+//struct gpsData{
+//  uint16_t hours,minutes,seconds;
+//  uint8_t dd, mm, yyyy;
+//  unsigned int fixAge;
+//  uint8_t sats;
+//  float latitude, longitude, alt;
+//}locationData;
 
 struct spsData_abv{
   uint16_t hits;
   float numberCount[5];
 }spsA_data_abv,spsB_data_abv;
 
-struct systemData{
-  unsigned long flightTime;
-  gpsData locationData;
-  float t1 = -127.00, t2 = -127.00;
-  float pressure;
-  spsData_abv spsA_data_abv,spsB_data_abv;
-  bool sensorHeatStatus;
-}compassData;
+//struct systemData{
+//  unsigned long flightTime;
+//  gpsData locationData;
+//  float t1 = -127.00, t2 = -127.00;
+//  float pressure;
+//  spsData_abv spsA_data_abv,spsB_data_abv;
+//  bool sensorHeatStatus;
+//}compassData;
+
+struct outputPacket{
+  uint8_t strt = BEGIN, sysID = SYSTEM_ID;
+  uint16_t packetNum = 0;
+  uint32_t relTime = millis();
+  uint8_t hrs = 0, mins = 0, secs = 0;
+  float lats, longs, alts, t1, t2, pressure;
+  spsData_abv A,B;
+  uint16_t checksum = 0;
+  uint8_t stp = STOP;
+}outputData;
 
 ///////////////////////////////////
 //////////Data Management//////////
@@ -141,11 +157,7 @@ static boolean FlightlogOpenB = false;                                   //SD fo
 //static boolean FlightlogOpen = false;                                   //SD for Flight Computer
 //const int chipSelect = BUILTIN_SDCARD; 
 
-//Data Transfer
-#define BEGIN 0x42
-#define STOP  0x53
-#define SYSTEM_ID 0x01
-uint16_t packetNum = 0;
+//uint16_t packetNum = 0;
 
 ////////////////////////////////////////////////
 //////////Environment Sensor Variables//////////
