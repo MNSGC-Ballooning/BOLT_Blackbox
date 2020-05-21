@@ -1,15 +1,15 @@
 // GPS   
 int getGPStime() 
 {
-  return (GPS.getHour() * 3600 + GPS.getMinute() * 60 + GPS.getSecond());
+  return (compassData.locationData.hours * 3600 + compassData.locationData.minutes * 60 + compassData.locationData.seconds);
 }
 
 void FixCheck(){                                                        //Check if gps fix is good
-  if (GPS.getFixAge() < 4000) 
+  if (compassData.locationData.fixAge < 4000) 
   {
     FixStatus = Fix;
   }
-  else if(GPS.getFixAge() > 4000)
+  else if(compassData.locationData.fixAge > 4000)
   {
     FixStatus = NoFix;
   }
@@ -92,29 +92,29 @@ void printData(){
   Serial.println("------------------------------");
   Serial.println("             GPS");
   Serial.print("Latitude: ");
-  Serial.println(String(GPS.getLat(), 4));
+  Serial.println(String(compassData.locationData.latitude, 4));
   Serial.print("Longitude: ");
-  Serial.println(String(GPS.getLon(), 4));  
+  Serial.println(String(compassData.locationData.longitude, 4));  
   Serial.print("Altitude: ");
-  Serial.println(String(GPS.getAlt_feet(), 1));
+  Serial.println(String(compassData.locationData.alt, 1));
   Serial.print("Date and Time: ");
-  Serial.println(String(GPS.getMonth()) + "/" + String(GPS.getDay()) + "/" + String(GPS.getYear()) + " " + String(GPS.getHour()) + ":" + String(GPS.getMinute()) + ":" + String(GPS.getSecond()));
+  Serial.println(String(compassData.locationData.mm) + "/" + String(compassData.locationData.dd) + "/" + String(compassData.locationData.yyyy) + " " + String(compassData.locationData.hours) + ":" + String(compassData.locationData.minutes) + ":" + String(compassData.locationData.seconds));
   Serial.print("Satellites and Fix Age: ");
-  Serial.println((String(GPS.getSats()) + ", " + String(GPS.getFixAge())));
+  Serial.println((String(compassData.locationData.sats) + ", " + String(compassData.locationData.fixAge)));
   Serial.println("------------------------------");
   Serial.println("          Temperature");
   Serial.println("   t1       t2"); 
-  Serial.println((String(t1,4) + ", " +String(t2,4)));
+  Serial.println((String(compassData.T1,4) + ", " +String(compassData.T2,4)));
   Serial.println("------------------------------");
   Serial.println("           Pressure");
   Serial.print("Pressure(PSI): ");
-  Serial.println(String(PressurePSI,6));
+  Serial.println(String(compassData.PressurePSI,6));
   Serial.print("Pressure(ATM): ");
-  Serial.println(String(PressureATM,6));
+  Serial.println(String(compassData.PressureATM,6));
   Serial.println("------------------------------");
   Serial.println("       System Statuses");
   Serial.print("Sensor Heater Relay: ");
-  Serial.println(sensorHeat_Status);
+  Serial.println(compassData.sensorHeatStatus);
   Serial.println("------------------------------");
   Serial.println("             OPCs");
   Serial.print("SPS A: ");

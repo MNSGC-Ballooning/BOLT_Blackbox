@@ -57,8 +57,8 @@
 #define SENSOR_HEATER_ON 35                                             //Latching Relay pins for heaters
 #define SENSOR_HEATER_OFF 36
 #define HONEYWELL_PRESSURE A9                                           //Analog Honeywell Pressure Sensor
-#define THERMOCOUPLE_A 15                                               //Chip Select pin for SPI for the thermocouples
-#define THERMOCOUPLE_B 20
+#define THERMISTOR_A 15                                                 //Chip Select pin for SPI for the thermocouples
+#define THERMISTOR_B 20
 #define SD_A 9
 #define SD_B 10
 #define UBLOX_SERIAL Serial1                                            //Serial Pins
@@ -96,27 +96,27 @@
 ////////////////////////
 //////////Data//////////
 ////////////////////////
-//struct gpsData{
-//  uint16_t hours,minutes,seconds;
-//  uint8_t dd, mm, yyyy;
-//  unsigned int fixAge;
-//  uint8_t sats;
-//  float latitude, longitude, alt;
-//}locationData;
+struct gpsData{
+  uint16_t hours,minutes,seconds;
+  uint8_t dd, mm, yyyy;
+  unsigned int fixAge;
+  uint8_t sats;
+  float latitude, longitude, alt;
+};
 
 struct spsData_abv{
   uint16_t hits;
   float numberCount[5];
-}spsA_data_abv,spsB_data_abv;
+};
 
-//struct systemData{
-//  unsigned long flightTime;
-//  gpsData locationData;
-//  float t1 = -127.00, t2 = -127.00;
-//  float pressure;
-//  spsData_abv spsA_data_abv,spsB_data_abv;
-//  bool sensorHeatStatus;
-//}compassData;
+struct systemData{
+  unsigned long flightTime;
+  gpsData locationData;
+  float T1 = -127.00, T2 = -127.00;
+  float PressureATM, PressurePSI;
+  spsData_abv spsA_data_abv,spsB_data_abv;
+  bool sensorHeatStatus;
+}compassData;
 
 struct outputPacket{
   uint8_t strt = BEGIN, sysID = SYSTEM_ID;
@@ -128,6 +128,8 @@ struct outputPacket{
   uint16_t checksum = 0;
   uint8_t stp = STOP;
 }outputData;
+
+
 
 ///////////////////////////////////
 //////////Data Management//////////
@@ -160,22 +162,33 @@ static boolean FlightlogOpenB = false;                                   //SD fo
 ////////////////////////////////////////////////
 //////////Environment Sensor Variables//////////
 ////////////////////////////////////////////////
-//Thermocouple Temp Sensors and Thermal Control
-Adafruit_MAX31856 thermocoupleA = Adafruit_MAX31856(THERMOCOUPLE_A);
-Adafruit_MAX31856 thermocoupleB = Adafruit_MAX31856(THERMOCOUPLE_B);
 
-float t1 = -127.00;                                                    //Temperature values
+//Thermistor measurements
+float t1 = -127.00;                                                    //Temperature initialization values
 float t2 = -127.00;
-bool coldSensor = false;
+float adcMax = 8196;                                                   // The maximum adc value given to the thermistor
+float A = 0.001125308852122;
+float B = 0.000234711863267;                                           // A, B, and C are constants used for a 10k resistor and 10k thermistor for the steinhart-hart equation
+float C = 0.000000085663516;                                           // NOTE: These values change when the thermistor and/or resistor change value, so if that happens, more research needs to be done on those constants
+float R = 10000;                                                       // 10k Ω resistor
+float Tinv1;                                                           // Intermediate temp values needed to calculate the actual tempurature
+float Tinv2;
+float adcVal1;
+float adcVal2;
+float logR1;
+float logR2;
 
+// active heating variables
+float sensTemp;
+bool coldSensor = false;
 LatchRelay sensorHeatRelay(SENSOR_HEATER_ON,SENSOR_HEATER_OFF);        //Declare latching relay objects and related logging variables
 String sensorHeat_Status = "";
 
 //Honeywell Pressure Sensor
 float pressureSensor;                                                  //Analog number given by sensor
 float pressureSensorVoltage;                                           //Voltage calculated from analog number
-float PressurePSI;                                                     //PSI calculated from voltage
-float PressureATM;                                                     //ATM calculated from PSI
+float pressurePSI;                                                     //PSI calculated from voltage
+float pressureATM;                                                     //ATM calculated from PSI
 
 //GPS
 UbloxGPS GPS(&UBLOX_SERIAL);
@@ -216,9 +229,6 @@ void setup() {
   initOPCs();                                                          //Initialize OPCs
   oledPrintNew(oled, "OPCInit");
   delay(1000);
-
-  initTemp();                                                          //Initialize Temp Sensors
-  oledPrintAdd(oled, "TmpInit");
   
   Serial.println("Setup Complete");
   oledPrintNew(oled, " Setup Success");
@@ -226,7 +236,7 @@ void setup() {
 
 void loop() {
   GPS.update();                                                        //Update GPS and plantower on private loops
-
+  
   if (millis() - logCounter >= LOG_RATE) {
       logCounter = millis();
       

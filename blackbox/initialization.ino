@@ -1,7 +1,7 @@
 //Initializations
 void initOLED(MicroOLED& named){                                        //Initializes the OLED Screen
   delay(100);
-  Wire.begin();
+  //Wire.begin();
   named.begin();                                                        //Initialize the OLED
   named.clear(ALL);                                                     //Clear the display's internal memory
   named.display();                                                      //Display what's in the buffer (splashscreen)
@@ -11,7 +11,7 @@ void initOLED(MicroOLED& named){                                        //Initia
   named.setFontType(1);
   named.clear(PAGE);
   named.setCursor(0,0);                                                 //Reset
-  named.print("COMPASSSYSTEM ONLINE");
+  named.print("COMPASS SYSTEM ONLINE");
   named.display();
   delay(2000);
 }
@@ -26,9 +26,9 @@ void initData(){
   FHeader += "SPSA, " + SpsA.CSVHeader();
   FHeader += ",SPSB, " + SpsB.CSVHeader();
 
-  pinMode(SD_A, OUTPUT);                                          //initialize SD card
+  pinMode(SD_A, OUTPUT);                                                //initialize SD card
   
-  while (!sdA.begin(SD_A)) {                                       //power LED will blink if no card is inserted
+  while (!sdA.begin(SD_A)) {                                            //power LED will blink if no card is inserted
     Serial.println("No SD A");
     SDcardA = false;
   }
@@ -47,15 +47,15 @@ void initData(){
   Serial.println("Flight log header added");                            
   closeFlightlogA();
 
-  pinMode(SD_B, OUTPUT);                                          //initialize SD card
+  pinMode(SD_B, OUTPUT);                                                 //initialize SD card
   
-  while (!sdB.begin(SD_B)) {                                       //power LED will blink if no card is inserted
+  while (!sdB.begin(SD_B)) {                                             //power LED will blink if no card is inserted
     Serial.println("No SD B");
     SDcardB = false;
   }
   SDcardB = true;
 
-  for (int i = 0; i < 100; i++) {                                       //Flight Log Name Cration
+  for (int i = 0; i < 100; i++) {                                        //Flight Log Name Cration
     FnameB = String("FLog" + String(i / 10) + String(i % 10) + ".csv");
     if (!sdB.exists(FnameB.c_str())) {
       openFlightlogB();
@@ -69,15 +69,15 @@ void initData(){
   closeFlightlogB();
 
 
-//  pinMode(chipSelect, OUTPUT);                                          //initialize SD card
+//  pinMode(chipSelect, OUTPUT);                                         //initialize SD card
 //  
-//  while (!SD.begin(chipSelect)) {                                       //power LED will blink if no card is inserted
+//  while (!SD.begin(chipSelect)) {                                      //power LED will blink if no card is inserted
 //    Serial.println("No SD");
 //    SDcard = false;
 //  }
 //  SDcard = true;
 //
-//  for (int i = 0; i < 100; i++) {                                       //Flight Log Name Cration
+//  for (int i = 0; i < 100; i++) {                                      //Flight Log Name Cration
 //    Fname = String("FLog" + String(i / 10) + String(i % 10) + ".csv");
 //    if (!SD.exists(Fname.c_str())) {
 //      openFlightlog();
@@ -87,7 +87,7 @@ void initData(){
 //  
 //  Serial.println("Flight log created: " + Fname);
   
-//  Flog.println(FHeader);                                                //Set up Flight log format
+//  Flog.println(FHeader);                                               //Set up Flight log format
 //  Serial.println("Flight log header added");                            
 //
 //  closeFlightlog();
@@ -103,13 +103,6 @@ void initGPS(){
     Serial.println("Airborne mode set!");
   }
   Serial.println("GPS configured");
-}
-
-void initTemp(){
-  thermocoupleA.begin();
-  thermocoupleB.begin();
-  thermocoupleA.setThermocoupleType(MAX31856_TCTYPE_K);
-  thermocoupleB.setThermocoupleType(MAX31856_TCTYPE_K);
 }
 
 void initRelays(){
