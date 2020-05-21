@@ -8,27 +8,27 @@ void sendDataPacket(){
   
   outputData.packetNum++; 
   outputData.relTime = millis();
-  outputData.hrs = GPS.getHour();
-  outputData.mins = GPS.getMinute();
-  outputData.secs = GPS.getSecond();
-  outputData.lats = GPS.getLat();
-  outputData.longs = GPS.getLon();
-  outputData.alts = GPS.getAlt_feet();
-  outputData.t1 = t1;
-  outputData.t2 = t2;
-  outputData.pressure = PressurePSI;
-  outputData.A.hits = SpsA.getTot();
-  outputData.A.numberCount[0] = SpsA.SPSdata.nums[0];
-  outputData.A.numberCount[1] = SpsA.SPSdata.nums[1];
-  outputData.A.numberCount[2] = SpsA.SPSdata.nums[2];
-  outputData.A.numberCount[3] = SpsA.SPSdata.nums[3];
-  outputData.A.numberCount[4] = SpsA.SPSdata.nums[4];
-  outputData.B.hits = SpsB.getTot();
-  outputData.B.numberCount[0] = SpsB.SPSdata.nums[0];
-  outputData.B.numberCount[1] = SpsB.SPSdata.nums[1];
-  outputData.B.numberCount[2] = SpsB.SPSdata.nums[2];
-  outputData.B.numberCount[3] = SpsB.SPSdata.nums[3];
-  outputData.B.numberCount[4] = SpsB.SPSdata.nums[4];
+  outputData.hrs = compassData.locationData.hours;
+  outputData.mins = compassData.locationData.minutes;
+  outputData.secs = compassData.locationData.seconds;
+  outputData.lats = compassData.locationData.latitude;
+  outputData.longs = compassData.locationData.longitude;
+  outputData.alts = compassData.locationData.alt;
+  outputData.t1 = compassData.T1;
+  outputData.t2 = compassData.T2;
+  outputData.pressure = compassData.PressurePSI;
+  outputData.A.hits = compassData.spsA_data_abv.hits;
+  outputData.A.numberCount[0] = compassData.spsA_data_abv.numberCount[0];
+  outputData.A.numberCount[1] = compassData.spsA_data_abv.numberCount[1];
+  outputData.A.numberCount[2] = compassData.spsA_data_abv.numberCount[2];
+  outputData.A.numberCount[3] = compassData.spsA_data_abv.numberCount[3];
+  outputData.A.numberCount[4] = compassData.spsA_data_abv.numberCount[4];
+  outputData.B.hits = compassData.spsB_data_abv.hits;
+  outputData.B.numberCount[0] = compassData.spsB_data_abv.numberCount[0];
+  outputData.B.numberCount[1] = compassData.spsB_data_abv.numberCount[1];
+  outputData.B.numberCount[2] = compassData.spsB_data_abv.numberCount[2];
+  outputData.B.numberCount[3] = compassData.spsB_data_abv.numberCount[3];
+  outputData.B.numberCount[4] = compassData.spsB_data_abv.numberCount[4];
     
   memcpy(&outputBytes, &outputData, 79);               //Pass the packet to the output array as bytes
   
