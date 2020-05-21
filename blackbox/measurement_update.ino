@@ -1,8 +1,5 @@
 //function to handle both retrieval of data from sensors, as well as recording it on the SD card
 void updateSensors() {
-
-  
-
   
   oledTime = millis();
 
@@ -26,8 +23,8 @@ void updateSensors() {
   logR2 = log(((adcMax/adcVal2)-1)*R);
   Tinv1 = A+B*logR2+C*logR1*logR1*logR1;
   Tinv2 = A+B*logR2+C*logR2*logR2*logR2;
-  t1 = 1/Tinv1;                                                         // The final temperatures for both transistors
-  t2 = 1/Tinv2;
+  t1 = 1/Tinv1-273.15;                                                  // The final temperatures for both transistors in Celsius
+  t2 = 1/Tinv2-273.15;
 
   
   

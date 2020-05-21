@@ -168,7 +168,7 @@ static boolean FlightlogOpenB = false;                                   //SD fo
 //Thermistor measurements
 float t1 = -127.00;                                                    //Temperature initialization values
 float t2 = -127.00;
-float adcMax = 1024;                                                   // The maximum adc value given to the thermistor
+float adcMax = 8196;                                                   // The maximum adc value given to the thermistor, should be 8196 for a teensy and 1024 for an Arduino
 float A = 0.001125308852122;
 float B = 0.000234711863267;                                           // A, B, and C are constants used for a 10k resistor and 10k thermistor for the steinhart-hart equation
 float C = 0.000000085663516;                                           // NOTE: These values change when the thermistor and/or resistor change value, so if that happens, more research needs to be done on those constants
