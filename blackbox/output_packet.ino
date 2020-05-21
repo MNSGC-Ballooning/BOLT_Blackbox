@@ -7,7 +7,7 @@ void sendDataPacket(){
   outputData.checksum = 0;
   
   outputData.packetNum++; 
-  outputData.relTime = millis();
+  outputData.relTime = compassData.flightTime;
   outputData.hrs = compassData.locationData.hours;
   outputData.mins = compassData.locationData.minutes;
   outputData.secs = compassData.locationData.seconds;

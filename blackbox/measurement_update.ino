@@ -31,12 +31,9 @@ void updateSensors() {
   
   // Next, pressure
   pressureSensor = analogRead(HONEYWELL_PRESSURE);                      //Read the analog pin
-  pressureSensorVoltage = pressureSensor * (5.0/8196);                  //Convert the analog number to voltage    //THESE NEED TO BE 3.3 INSTEAD OF 5.0!!!!!!!!!!
+  pressureSensorVoltage = pressureSensor * (5.0/8196);                  //Convert the analog number to voltage
   pressurePSI = (pressureSensorVoltage - (0.1*5.0))/(4.0/15.0);         //Convert the voltage to PSI
   pressureATM = pressurePSI*PSI_TO_ATM;                                 //Convert PSI reading to ATM
-
-
-  
   
   // Finally, OPC data
   OPCdata = SpsA.logUpdate();

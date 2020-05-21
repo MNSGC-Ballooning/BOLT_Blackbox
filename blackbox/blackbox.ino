@@ -28,14 +28,13 @@
      SPS30 A                      | UART 4 (31,32)
      SPS30 B                      | UART 3 (7,8)
      Data Stream                  | UART 5 (33,34)
-     Thermistor A                 | SPI 0 (11,12,13,15)
-     Thermistor B                 | SPI 0 (11,12,13,20)
+     Thermistor A                 | A9
+     Thermistor B                 | A10
      SD A                         | SPI 0 (11,12,13,9)
      SD B                         | SPI 0 (11,12,13,10)
-     Pressure sensor              | A9 (23)
+     Pressure sensor              | I2C 0 (18,19)
      OLED                         | I2C 0 (18,19)
      OPC Heater                   | (35,36)
-
      
      -------------------------------------------------------------------------------------------------------------------------------------------
 */
@@ -55,7 +54,6 @@
 ////////////////////////////////////
 //////////Pin Definitions///////////
 ////////////////////////////////////
-
 #define SENSOR_HEATER_ON 35                                             //Latching Relay pins for heaters
 #define SENSOR_HEATER_OFF 36
 #define HONEYWELL_PRESSURE A9                                           //Analog Honeywell Pressure Sensor
