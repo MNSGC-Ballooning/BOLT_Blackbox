@@ -1,12 +1,11 @@
 //Function to generate the output packet
-
 void sendDataPacket(){
-  byte outputBytes[82];
+  byte outputBytes[82];                              //Define output byte arrays
   byte checksumBytes[2];
 
-  outputData.checksum = 0;
+  outputData.checksum = 0;                           //Reset the checksum
   
-  outputData.packetNum++; 
+  outputData.packetNum++;                            //Did someone say - "update the system with data points equivalent to what was just logged locally?"
   outputData.relTime = compassData.flightTime;
   outputData.hrs = compassData.locationData.hours;
   outputData.mins = compassData.locationData.minutes;
@@ -14,6 +13,14 @@ void sendDataPacket(){
   outputData.lats = compassData.locationData.latitude;
   outputData.longs = compassData.locationData.longitude;
   outputData.alts = compassData.locationData.alt;
+
+//  outputData.hrs = 0;                             //Replace the actual GPS data with zeros if Florida requests no GPS data
+//  outputData.mins = 0;
+//  outputData.secs = 0;
+//  outputData.lats = 0;
+//  outputData.longs = 0;
+//  outputData.alts = 0;
+  
   outputData.t1 = compassData.T1;
   outputData.t2 = compassData.T2;
   outputData.pressure = compassData.PressurePSI;

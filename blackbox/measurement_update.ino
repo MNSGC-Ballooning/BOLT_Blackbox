@@ -10,30 +10,25 @@ void updateSensors() {
     sensorHeat_Status = "OFF";
   }
 
-
   //////////////////////////////////////////////////////
   //////////// Raw calculation of variables ////////////
   //////////////////////////////////////////////////////
-  // Temperature, Pressure, and Altitude (I'm pretty sure they mean OPC data instead of Altitude)
+  // Temperature, Pressure, and OPc
   // First, temperature
-  
   adcVal1 = analogRead(THERMISTOR_A);                                   // All of these calculations have to do with the Steinhart-Hart equations and setting them up properly
   adcVal2 = analogRead(THERMISTOR_B);
-  logR1 = log(((adcMax/adcVal1)-1)*R);
-  logR2 = log(((adcMax/adcVal2)-1)*R);
-  Tinv1 = A+B*logR2+C*logR1*logR1*logR1;
-  Tinv2 = A+B*logR2+C*logR2*logR2*logR2;
-  t1 = 1/Tinv1-273.15;                                                  // The final temperatures for both transistors in Celsius
-  t2 = 1/Tinv2-273.15;
+  logR1 = log(((ADC_MAX/adcVal1)-1)*CONST_R);
+  logR2 = log(((ADC_MAX/adcVal2)-1)*CONST_R);
+  Tinv1 = CONST_A+CONST_B*logR2+CONST_C*logR1*logR1*logR1;
+  Tinv2 = CONST_A+CONST_B*logR2+CONST_C*logR2*logR2*logR2;
+  compassData.T1 = 1/Tinv1-C2K;                                                  // The final temperatures for both transistors in Celsius
+  compassData.T2 = 1/Tinv2-C2K;
 
-  
-  
-  
   // Next, pressure
-  pressureSensor = analogRead(HONEYWELL_PRESSURE);                      //Read the analog pin
-  pressureSensorVoltage = pressureSensor * (5.0/8196);                  //Convert the analog number to voltage
-  pressurePSI = (pressureSensorVoltage - (0.1*5.0))/(4.0/15.0);         //Convert the voltage to PSI
-  pressureATM = pressurePSI*PSI_TO_ATM;                                 //Convert PSI reading to ATM
+  compassData.PressurePSI = analogRead(HONEYWELL_PRESSURE);                      //Read the analog pin
+  compassData.PressurePSI = compassData.PressurePSI * (5.0/8196);                //Convert the analog number to voltage
+  compassData.PressurePSI = (compassData.PressurePSI - (0.1*5.0))/(4.0/15.0);    //Convert the voltage to PSI
+  compassData.PressureATM = compassData.PressurePSI*PSI_TO_ATM;                  //Convert PSI reading to ATM
   
   // Finally, OPC data
   OPCdata = SpsA.logUpdate();
@@ -42,8 +37,7 @@ void updateSensors() {
   //////////////////////////////////////////////////////////////////////////////////
   ///////////// UPDATING THE SYSTEM DATA STRUCT (called "compassData") /////////////
   //////////////////////////////////////////////////////////////////////////////////
-  // This is mainly for simplicity and means only calling these variables once in one data structure later on, which also saves some memory and logging time
-  // The GPS update for the struct "locationData" comes from the main script "blackbox.ino" that's why it isn't shown above this
+  //Using a struct means that update functions are only called once, so the data logged locally and sent externally is universally consistent.
 
   compassData.flightTime = millis();
   compassData.locationData.latitude = GPS.getLat();
@@ -58,10 +52,6 @@ void updateSensors() {
   compassData.locationData.sats = GPS.getSats();
   compassData.locationData.fixAge = GPS.getFixAge();
   compassData.sensorHeatStatus = sensorHeat_Status;
-  compassData.T1 = t1;
-  compassData.T2 = t2;
-  compassData.PressureATM = pressureATM;
-  compassData.PressurePSI = pressurePSI;
   compassData.spsA_data_abv.hits = SpsA.getTot();
   compassData.spsA_data_abv.numberCount[0] = SpsA.SPSdata.nums[0];
   compassData.spsA_data_abv.numberCount[1] = SpsA.SPSdata.nums[1];
@@ -86,7 +76,7 @@ void updateSensors() {
   + String(compassData.locationData.hours) + ":" + String(compassData.locationData.minutes) + ":" + String(compassData.locationData.seconds) + ","
   + String(compassData.locationData.sats) + ",";
   
-  if(compassData.locationData.fixAge > 4000){                                           //GPS should update once per second, if data is more than 2 seconds old, fix was likely lost
+  if(compassData.locationData.fixAge > 4000){                                    //GPS should update once per second, if data is more than 4 seconds old, fix was likely lost
     data += "No Fix,";
   }
   else{

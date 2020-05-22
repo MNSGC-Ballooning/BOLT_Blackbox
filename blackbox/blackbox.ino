@@ -56,9 +56,9 @@
 ////////////////////////////////////
 #define SENSOR_HEATER_ON 35                                             //Latching Relay pins for heaters
 #define SENSOR_HEATER_OFF 36
-#define HONEYWELL_PRESSURE A9                                           //Analog Honeywell Pressure Sensor
-#define THERMISTOR_A 15                                                 //Chip Select pin for SPI for the thermocouples
-#define THERMISTOR_B 20
+#define HONEYWELL_PRESSURE A11                                          //Analog Honeywell Pressure Sensor
+#define THERMISTOR_A A9                                                 //Chip Select pin for SPI for the thermocouples
+#define THERMISTOR_B A10
 #define SD_A 9
 #define SD_B 10
 #define UBLOX_SERIAL Serial1                                            //Serial Pins
@@ -86,6 +86,11 @@
 #define DC_JUMPER 1                                                     //The DC_JUMPER is the I2C Address Select jumper. Set to 1 if the jumper is open (Default), or set to 0 if it's closed.
 #define NoFix 0x00
 #define Fix 0x01
+#define ADC_MAX 8196                                                    // The maximum adc value given to the thermistor, should be 8196 for a teensy and 1024 for an Arduino
+#define CONST_A 0.001125308852122
+#define CONST_B 0.000234711863267                                       // A, B, and C are constants used for a 10k resistor and 10k thermistor for the steinhart-hart equation
+#define CONST_C 0.000000085663516                                       // NOTE: These values change when the thermistor and/or resistor change value, so if that happens, more research needs to be done on those constants
+#define CONST_R 10000                                                   // 10k Ω resistor
 
 //Control
 #define HIGH_TEMP 16                                                    //Thermal control
@@ -157,8 +162,6 @@ static boolean FlightlogOpenB = false;                                   //SD fo
 //static boolean FlightlogOpen = false;                                   //SD for Flight Computer
 //const int chipSelect = BUILTIN_SDCARD; 
 
-//uint16_t packetNum = 0;
-
 ////////////////////////////////////////////////
 //////////Environment Sensor Variables//////////
 ////////////////////////////////////////////////
@@ -166,11 +169,6 @@ static boolean FlightlogOpenB = false;                                   //SD fo
 //Thermistor measurements
 float t1 = -127.00;                                                    //Temperature initialization values
 float t2 = -127.00;
-float adcMax = 8196;                                                   // The maximum adc value given to the thermistor, should be 8196 for a teensy and 1024 for an Arduino
-float A = 0.001125308852122;
-float B = 0.000234711863267;                                           // A, B, and C are constants used for a 10k resistor and 10k thermistor for the steinhart-hart equation
-float C = 0.000000085663516;                                           // NOTE: These values change when the thermistor and/or resistor change value, so if that happens, more research needs to be done on those constants
-float R = 10000;                                                       // 10k Ω resistor
 float Tinv1;                                                           // Intermediate temp values needed to calculate the actual tempurature
 float Tinv2;
 float adcVal1;
@@ -185,10 +183,10 @@ LatchRelay sensorHeatRelay(SENSOR_HEATER_ON,SENSOR_HEATER_OFF);        //Declare
 String sensorHeat_Status = "";
 
 //Honeywell Pressure Sensor
-float pressureSensor;                                                  //Analog number given by sensor
-float pressureSensorVoltage;                                           //Voltage calculated from analog number
-float pressurePSI;                                                     //PSI calculated from voltage
-float pressureATM;                                                     //ATM calculated from PSI
+//float pressureSensor;                                                  //Analog number given by sensor
+//float pressureSensorVoltage;                                           //Voltage calculated from analog number
+//float pressurePSI;                                                     //PSI calculated from voltage
+//float pressureATM;                                                     //ATM calculated from PSI
 
 //GPS
 UbloxGPS GPS(&UBLOX_SERIAL);
@@ -240,9 +238,9 @@ void loop() {
   if (millis() - logCounter >= LOG_RATE) {
       logCounter = millis();
       
-      updateSensors();                                                   //Updates and logs all sensor data
-      sendDataPacket();                                                  //Output the data packet
-      actHeat();                                                         //Controls active heating
-      oledUpdate();                                                      //Update screen
+      updateSensors();                                                  //Updates and logs all sensor data
+      sendDataPacket();                                                 //Output the data packet
+      actHeat();                                                        //Controls active heating
+      oledUpdate();                                                     //Update screen
   }   
 }

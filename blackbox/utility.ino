@@ -20,7 +20,7 @@ void FixCheck(){                                                        //Check 
 }
 
 String flightTimeStr() {                                                //Returns the flight time as a usable string for print statements  
-  unsigned long t = millis() / 1000;
+  unsigned long t = compassData.flightTime / 1000;
   String fTime = "";
   fTime += (String(t / 3600) + ":");
   t %= 3600;
@@ -33,7 +33,7 @@ String flightTimeStr() {                                                //Return
 }
 
 float flightMinutes() {                                                 //Return time in minutes
-  float minutes = millis() / 1000;
+  float minutes = compassData.flightTime / 1000;
   minutes = minutes / 60;
   return minutes;
 }
