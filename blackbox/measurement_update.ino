@@ -26,7 +26,7 @@ void updateSensors() {
 
   // Next, pressure
   compassData.PressurePSI = analogRead(HONEYWELL_PRESSURE);                      //Read the analog pin
-  compassData.PressurePSI = compassData.PressurePSI * (5.0/8196);                //Convert the analog number to voltage
+  compassData.PressurePSI = compassData.PressurePSI * (5.0/ADC_MAX);              //Convert the analog number to voltage
   compassData.PressurePSI = (compassData.PressurePSI - (0.1*5.0))/(4.0/15.0);    //Convert the voltage to PSI
   compassData.PressureATM = compassData.PressurePSI*PSI_TO_ATM;                  //Convert PSI reading to ATM
   

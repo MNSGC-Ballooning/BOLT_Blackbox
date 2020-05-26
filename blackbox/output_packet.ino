@@ -49,8 +49,6 @@ void sendDataPacket(){
   outputBytes[80] = checksumBytes[1];
   
   outputBytes[81] = outputData.stp;                         //Add the stop byte
-  
-  for (unsigned short i = 0; i < 82; i++){        //Send the data
-    DATA_SERIAL.write(outputBytes[i]);
-  }
+      
+  DATA_SERIAL.write(outputBytes,82);                     //Send the data
 }
