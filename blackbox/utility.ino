@@ -38,47 +38,47 @@ float flightMinutes() {                                                 //Return
   return minutes;
 }
 
-void openFlightlogA() {                                                  //Open flight log
-  if (!FlightlogOpenA&&SDcardA) {
-    //add .c_str() next to Fname
-    FlogA = sdA.open(FnameA.c_str(), FILE_WRITE);
-    FlightlogOpenA = true;
-  }
-}
-void closeFlightlogA() {                                                 //Close flight log
-  if (FlightlogOpenA&&SDcardA) {
-    FlogA.close();
-    FlightlogOpenA = false;
-  }
-}
-
-void openFlightlogB() {                                                  //Open flight log
-  if (!FlightlogOpenB&&SDcardB) {
-    //add .c_str() next to Fname
-    FlogB = sdB.open(FnameB.c_str(), FILE_WRITE);
-    FlightlogOpenB = true;
-  }
-}
-void closeFlightlogB() {                                                 //Close flight log
-  if (FlightlogOpenB&&SDcardB) {
-    FlogB.close();
-    FlightlogOpenB = false;
-  }
-}
-
-//void openFlightlog() {                                                  //Open flight log
-//  if (!FlightlogOpen&&SDcard) {
+//void openFlightlogA() {                                                  //Open flight log
+//  if (!FlightlogOpenA&&SDcardA) {
 //    //add .c_str() next to Fname
-//    Flog = SD.open(Fname.c_str(), FILE_WRITE);
-//    FlightlogOpen = true;
+//    FlogA = sdA.open(FnameA.c_str(), FILE_WRITE);
+//    FlightlogOpenA = true;
 //  }
 //}
-//void closeFlightlog() {                                                 //Close flight log
-//  if (FlightlogOpen&&SDcard) {
-//    Flog.close();
-//    FlightlogOpen = false;
+//void closeFlightlogA() {                                                 //Close flight log
+//  if (FlightlogOpenA&&SDcardA) {
+//    FlogA.close();
+//    FlightlogOpenA = false;
 //  }
 //}
+//
+//void openFlightlogB() {                                                  //Open flight log
+//  if (!FlightlogOpenB&&SDcardB) {
+//    //add .c_str() next to Fname
+//    FlogB = sdB.open(FnameB.c_str(), FILE_WRITE);
+//    FlightlogOpenB = true;
+//  }
+//}
+//void closeFlightlogB() {                                                 //Close flight log
+//  if (FlightlogOpenB&&SDcardB) {
+//    FlogB.close();
+//    FlightlogOpenB = false;
+//  }
+//}
+
+void openFlightlog() {                                                  //Open flight log
+  if (!FlightlogOpen&&SDcard) {
+    //add .c_str() next to Fname
+    Flog = SD.open(Fname.c_str(), FILE_WRITE);
+    FlightlogOpen = true;
+  }
+}
+void closeFlightlog() {                                                 //Close flight log
+  if (FlightlogOpen&&SDcard) {
+    Flog.close();
+    FlightlogOpen = false;
+  }
+}
 
 void printData(){
   Serial.println();

@@ -57,10 +57,10 @@
 #define SENSOR_HEATER_ON 35                                             //Latching Relay pins for heaters
 #define SENSOR_HEATER_OFF 36
 #define HONEYWELL_PRESSURE A11                                          //Analog Honeywell Pressure Sensor
-#define THERMISTOR_A A9                                                 //Chip Select pin for SPI for the thermocouples
-#define THERMISTOR_B A10
-#define SD_A 9
-#define SD_B 10
+#define THERMISTOR_A A18                                                //Chip Select pin for SPI for the thermocouples
+#define THERMISTOR_B A9
+//#define SD_A 9
+//#define SD_B 10
 #define UBLOX_SERIAL Serial1                                            //Serial Pins
 #define SPSA_SERIAL Serial4
 #define SPSB_SERIAL Serial3                                           
@@ -103,7 +103,8 @@
 ////////////////////////
 struct gpsData{
   uint16_t hours,minutes,seconds;
-  uint8_t dd, mm, yyyy;
+  uint8_t dd, mm;
+  uint16_t yyyy;
   unsigned int fixAge;
   uint8_t sats;
   float latitude, longitude, alt;
@@ -143,24 +144,25 @@ struct outputPacket{
 unsigned long logCounter = 0;
 String data;
 
-SDClass sdA;
-File FlogA;                                                             //Variables needed to establish the flight log
-String FnameA = "";
-boolean SDcardA = true;
-static boolean FlightlogOpenA = false;                                   //SD for Flight Computer
+//SDClass sdA;
+//File FlogA;                                                             //Variables needed to establish the flight log
+//String FnameA = "";
+//boolean SDcardA = true;
+//static boolean FlightlogOpenA = false;                                   //SD for Flight Computer
+//
+//SDClass sdB;
+//File FlogB;                                                             //Variables needed to establish the flight log
+//String FnameB = "";
+//boolean SDcardB = true;
+//static boolean FlightlogOpenB = false;                                   //SD for Flight Computer
 
-SDClass sdB;
-File FlogB;                                                             //Variables needed to establish the flight log
-String FnameB = "";
-boolean SDcardB = true;
-static boolean FlightlogOpenB = false;                                   //SD for Flight Computer
-
-//File Flog;                                                             //Variables needed to establish the flight log
-//static String data;
-//String Fname = "";
-//boolean SDcard = true;
-//static boolean FlightlogOpen = false;                                   //SD for Flight Computer
-//const int chipSelect = BUILTIN_SDCARD; 
+SDClass SD;
+File Flog;                                                             //Variables needed to establish the flight log
+static String dataLine;
+String Fname = "";
+boolean SDcard = true;
+static boolean FlightlogOpen = false;                                   //SD for Flight Computer
+const int chipSelect = BUILTIN_SDCARD; 
 
 ////////////////////////////////////////////////
 //////////Environment Sensor Variables//////////
@@ -211,21 +213,29 @@ unsigned long screenUpdateTimer = 0;
 void setup() {
   analogReadResolution(13);
   SPI.begin();
-  
+  Wire.begin();
+  Serial.begin(9600);
+
+  Serial.println("Beginning Initialization cycle!");
   initOLED(oled);                                                      //Initialize OLED Screen
+  Serial.println("OLED init!");
   
   initData();                                                          //Initialize SD
-  oledPrintNew(oled, "Data Init");
-
+  oledPrintNew(oled, "DatInit");
+  Serial.println("Data init!");
+  
   initGPS();                                                           //Initialize GPS
   oledPrintAdd(oled, "GPSInit");
+  Serial.println("GPS init!");
   delay(1000);
 
   initRelays();                                                        //Initialize Relays
   oledPrintAdd(oled, "RlyInit");
+  Serial.println("Actuator init!");
 
   initOPCs();                                                          //Initialize OPCs
   oledPrintNew(oled, "OPCInit");
+  Serial.println("OPC init!");
   delay(1000);
   
   Serial.println("Setup Complete");

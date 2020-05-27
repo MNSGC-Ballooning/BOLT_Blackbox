@@ -69,39 +69,44 @@ void updateSensors() {
   ////////// UPDATING THE DATA STRING (called "data") //////////////
   //////////////////////////////////////////////////////////////////
   
-  data = "";
-  data = flightTimeStr()+ "," + String(flightMinutes()) + "," + "," + String(compassData.locationData.latitude, 4) + "," + String(compassData.locationData.longitude, 4) + "," 
+  dataLine = "";
+  dataLine = flightTimeStr()+ "," + String(flightMinutes()) + "," + String(compassData.locationData.latitude, 4) + "," + String(compassData.locationData.longitude, 4) + "," 
   + String(compassData.locationData.alt, 1) + ","
   + String(compassData.locationData.mm) + "/" + String(compassData.locationData.dd) + "/" + String(compassData.locationData.yyyy) + ","
   + String(compassData.locationData.hours) + ":" + String(compassData.locationData.minutes) + ":" + String(compassData.locationData.seconds) + ","
   + String(compassData.locationData.sats) + ",";
   
   if(compassData.locationData.fixAge > 4000){                                    //GPS should update once per second, if data is more than 4 seconds old, fix was likely lost
-    data += "No Fix,";
+    dataLine += "No Fix,";
   }
   else{
-    data += "Fix,";
+    dataLine += "Fix,";
   }
 
-  data += (String(compassData.T1,4) + "," +String(compassData.T2,4) + ",");     //Data string population
-  data += (String(compassData.PressurePSI,6) + "," + String(compassData.PressureATM,6) + ",");
-  data += (compassData.sensorHeatStatus + ",");
-  data += (",=," + OPCdata);
+  dataLine += (String(compassData.T1,4) + "," +String(compassData.T2,4) + ",");     //Data string population
+  dataLine += (String(compassData.PressurePSI,6) + "," + String(compassData.PressureATM,6) + ",");
+  dataLine += (compassData.sensorHeatStatus + ",");
+  dataLine += (",=," + OPCdata);
   
   /////////////////////////////////////////////////////////////
   ///////////// Logging the data onto the SD card /////////////
   /////////////////////////////////////////////////////////////
   // All these functions are in the "SD.h" library, so for more information, go there
-  
-  openFlightlogA();
-  delay(100); 
-  FlogA.println(data);                                                                    // Printing the data from A in the SD card
-  closeFlightlogA();
 
-  openFlightlogB();
+  openFlightlog();
   delay(100); 
-  FlogB.println(data);                                                                    // Printing the data from B in the SD card
-  closeFlightlogB();
+  Flog.println(dataLine);                                                                    // Printing the data from A in the SD card
+  closeFlightlog();
+  
+//  openFlightlogA();
+//  delay(100); 
+//  FlogA.println(data);                                                                    // Printing the data from A in the SD card
+//  closeFlightlogA();
+//
+//  openFlightlogB();
+//  delay(100); 
+//  FlogB.println(data);                                                                    // Printing the data from B in the SD card
+//  closeFlightlogB();
 
   ///////////////////////////////////////////////////////
   //////////// Printing the Data to Serial //////////////
