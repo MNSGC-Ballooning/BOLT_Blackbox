@@ -95,7 +95,7 @@
 //Control
 #define HIGH_TEMP 16                                                    //Thermal control
 #define LOW_TEMP 10
-#define LOG_RATE 1000
+#define LOG_RATE 1400
 #define SCREEN_UPDATE_RATE 2000
 
 ////////////////////////

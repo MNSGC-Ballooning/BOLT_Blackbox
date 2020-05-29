@@ -43,7 +43,7 @@ void sendDataPacket(){
     outputData.checksum += outputBytes[i];
   }
 
-   memcpy(&checksumBytes, &outputData.checksum, 2);    //Pass the checksum bytes to a staging array
+  memcpy(&checksumBytes, &outputData.checksum, 2);    //Pass the checksum bytes to a staging array
   
   outputBytes[79] = checksumBytes[0];             //Add the checksum to the output
   outputBytes[80] = checksumBytes[1];
