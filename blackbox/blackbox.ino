@@ -23,18 +23,18 @@
 /*  Teensy 3.5/3.6 pin connections:
      ------------------------------------------------------------------------------------------------------------------------------------------
      Component                    | Pins used         
-
+                                  | Communication: (Pins used) (RX/TX on Teensy for UART)
      UBlox Neo m8n                | UART 1 (0,1)          
-     SPS30 A                      | UART 4 (31,32)
+     SPS30 A                      | UART 2 (9,10)
      SPS30 B                      | UART 3 (7,8)
-     Data Stream                  | UART 5 (33,34)
-     Thermistor A                 | A9
-     Thermistor B                 | A10
-     SD A                         | SPI 0 (11,12,13,9)
-     SD B                         | SPI 0 (11,12,13,10)
-     Pressure sensor              | I2C 0 (18,19)
+     Data Stream                  | UART 5 (34,33)
+     Thermistor A                 | Analog (22/A8)
+     Thermistor B                 | Analog (23/A9)
+     SD A                         | SPI 0 (11,12,13,20)
+     Pressure sensor              | Analog (21/A7)
      OLED                         | I2C 0 (18,19)
      OPC Heater                   | (35,36)
+     LED                          | (5)
      
      -------------------------------------------------------------------------------------------------------------------------------------------
 */
