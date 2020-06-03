@@ -50,6 +50,7 @@
 #include <Adafruit_MAX31856.h>                                          //Adafruit Library
 #include <LatchRelay.h>                                                 //Heater relay
 #include <Wire.h>                                                       //I2C library if the I2C mode in SPS is disabled
+#include <MS5611.h>
 
 ////////////////////////////////////
 //////////Pin Definitions///////////
@@ -91,6 +92,7 @@
 #define CONST_B 0.000234711863267                                       // A, B, and C are constants used for a 10k resistor and 10k thermistor for the steinhart-hart equation
 #define CONST_C 0.000000085663516                                       // NOTE: These values change when the thermistor and/or resistor change value, so if that happens, more research needs to be done on those constants
 #define CONST_R 10000                                                   // 10k Ω resistor
+#define FEET_PER_METER 3.28084                                          // feet per meter
 
 //Control
 #define HIGH_TEMP 16                                                    //Thermal control
@@ -190,9 +192,20 @@ String sensorHeat_Status = "";
 //float pressurePSI;                                                     //PSI calculated from voltage
 //float pressureATM;                                                     //ATM calculated from PSI
 
+//// MS5611 Pressure Sensor Variables
+//MS5611 baro;
+//float seaLevelPressure;                                                   // in Pascals
+//float baroReferencePressure;                                              // some fun pressure/temperature readings below 
+//float baroTemp;                                                           // non-"raw" readings are in Pa for pressure, C for temp, meters for altitude
+//unsigned int pressurePa;
+//float pressureAltitude;
+//float pressureRelativeAltitude;
+//boolean baroCalibrated = false;                                           // inidicates if the barometer has been calibrated or not
+
 //GPS
 UbloxGPS GPS(&UBLOX_SERIAL);
 uint8_t FixStatus= NoFix;
+bool gpsConnected = false;
 
 ////////////////////////
 //////////OPCs//////////
@@ -229,12 +242,16 @@ void setup() {
   Serial.println("GPS init!");
   delay(1000);
 
+//  initPressure();
+//  oledPrintAdd(oled, "PrsInit");
+//  Serial.println("Pressure init!");
+
   initRelays();                                                        //Initialize Relays
-  oledPrintAdd(oled, "RlyInit");
+  oledPrintNew(oled, "RlyInit");
   Serial.println("Actuator init!");
 
   initOPCs();                                                          //Initialize OPCs
-  oledPrintNew(oled, "OPCInit");
+  oledPrintAdd(oled, "OPCInit");
   Serial.println("OPC init!");
   delay(1000);
   

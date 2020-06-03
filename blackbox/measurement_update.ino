@@ -3,6 +3,7 @@ void updateSensors() {
   
   oledTime = millis();
 
+
   if(sensorHeatRelay.getState()){
     sensorHeat_Status = "ON";
   }
@@ -25,6 +26,7 @@ void updateSensors() {
   compassData.T2 = 1/Tinv2-C2K;
 
   // Next, pressure
+  //updatePressure();
   compassData.PressurePSI = analogRead(HONEYWELL_PRESSURE);                      //Read the analog pin
   compassData.PressurePSI = compassData.PressurePSI * (5.0/ADC_MAX);              //Convert the analog number to voltage
   compassData.PressurePSI = (compassData.PressurePSI - (0.1*5.0))/(4.0/15.0);    //Convert the voltage to PSI
@@ -40,17 +42,32 @@ void updateSensors() {
   //Using a struct means that update functions are only called once, so the data logged locally and sent externally is universally consistent.
 
   compassData.flightTime = millis();
-  compassData.locationData.latitude = GPS.getLat();
-  compassData.locationData.longitude = GPS.getLon();
-  compassData.locationData.alt = GPS.getAlt_feet();
-  compassData.locationData.mm = GPS.getMonth();
-  compassData.locationData.dd = GPS.getDay();
-  compassData.locationData.yyyy = GPS.getYear();
-  compassData.locationData.hours = GPS.getHour();
-  compassData.locationData.minutes = GPS.getMinute();
-  compassData.locationData.seconds = GPS.getSecond();
-  compassData.locationData.sats = GPS.getSats();
-  compassData.locationData.fixAge = GPS.getFixAge();
+
+  if (gpsConnected){
+    compassData.locationData.latitude = GPS.getLat();
+    compassData.locationData.longitude = GPS.getLon();
+    compassData.locationData.alt = GPS.getAlt_feet();
+    compassData.locationData.mm = GPS.getMonth();
+    compassData.locationData.dd = GPS.getDay();
+    compassData.locationData.yyyy = GPS.getYear();
+    compassData.locationData.hours = GPS.getHour();
+    compassData.locationData.minutes = GPS.getMinute();
+    compassData.locationData.seconds = GPS.getSecond();
+    compassData.locationData.sats = GPS.getSats();
+    compassData.locationData.fixAge = GPS.getFixAge();
+  } else {
+    compassData.locationData.latitude = 0.0;
+    compassData.locationData.longitude = 0.0;
+    compassData.locationData.alt = 0.0;
+    compassData.locationData.mm = 00;
+    compassData.locationData.dd = 00;
+    compassData.locationData.yyyy = 0000;
+    compassData.locationData.hours = 00;
+    compassData.locationData.minutes = 00;
+    compassData.locationData.seconds = 00;
+    compassData.locationData.sats = 0;
+    compassData.locationData.fixAge = 0;
+  }
   compassData.sensorHeatStatus = sensorHeat_Status;
   compassData.spsA_data_abv.hits = SpsA.getTot();
   compassData.spsA_data_abv.numberCount[0] = SpsA.SPSdata.nums[0];
@@ -115,3 +132,14 @@ void updateSensors() {
   
   printData();
 }
+
+//void updatePressure(){
+//
+//  // Read true temperature & Pressure
+//  baroTemp = baro.readTemperature();
+//  pressurePa = baro.readPressure();
+//
+//  // Calculate altitude
+//  pressureAltitude = baro.getAltitude(pressurePa, seaLevelPressure)*FEET_PER_METER;
+//  pressureRelativeAltitude = baro.getAltitude(pressurePa, baroReferencePressure)*FEET_PER_METER; 
+//}
