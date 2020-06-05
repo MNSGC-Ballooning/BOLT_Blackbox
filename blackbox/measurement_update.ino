@@ -16,22 +16,22 @@ void updateSensors() {
   //////////////////////////////////////////////////////
   // Temperature, Pressure, and OPc
   // First, temperature
-  adcVal1 = analogRead(THERMISTOR_A);                                   // All of these calculations have to do with the Steinhart-Hart equations and setting them up properly
-  adcVal2 = analogRead(THERMISTOR_B);
-  logR1 = log(((ADC_MAX/adcVal1)-1)*CONST_R);
-  logR2 = log(((ADC_MAX/adcVal2)-1)*CONST_R);
-  Tinv1 = CONST_A+CONST_B*logR2+CONST_C*logR1*logR1*logR1;
-  Tinv2 = CONST_A+CONST_B*logR2+CONST_C*logR2*logR2*logR2;
-  compassData.T1 = 1/Tinv1-C2K;                                                  // The final temperatures for both transistors in Celsius
-  compassData.T2 = 1/Tinv2-C2K;
+  compassData.T1 = analogRead(THERMISTOR_A);                                   // All of these calculations have to do with the Steinhart-Hart equations and setting them up properly
+  compassData.T2 = analogRead(THERMISTOR_B);
+  compassData.T1 = log(((ADC_MAX/compassData.T1)-1)*CONST_R);
+  compassData.T2 = log(((ADC_MAX/compassData.T2)-1)*CONST_R);
+  compassData.T1 = CONST_A+CONST_B*compassData.T1+CONST_C*compassData.T1*compassData.T1*compassData.T1;
+  compassData.T2 = CONST_A+CONST_B*compassData.T2+CONST_C*compassData.T2*compassData.T2*compassData.T2;
+  compassData.T1 = 1/compassData.T1-C2K;                                                  // The final temperatures for both transistors in Celsius
+  compassData.T2 = 1/compassData.T2-C2K;
 
   // Next, pressure
-  //updatePressure();
-  compassData.PressurePSI = analogRead(HONEYWELL_PRESSURE);                      //Read the analog pin
-  compassData.PressurePSI = compassData.PressurePSI * (5.0/ADC_MAX);              //Convert the analog number to voltage
-  compassData.PressurePSI = (compassData.PressurePSI - (0.1*5.0))/(4.0/15.0);    //Convert the voltage to PSI
-  compassData.PressureATM = compassData.PressurePSI*PSI_TO_ATM;                  //Convert PSI reading to ATM
-  
+  updatePressure();
+//  compassData.PressurePSI = analogRead(HONEYWELL_PRESSURE);                      //Read the analog pin
+//  compassData.PressurePSI = compassData.PressurePSI * (5.0/ADC_MAX);              //Convert the analog number to voltage
+//  compassData.PressurePSI = (compassData.PressurePSI - (0.1*5.0))/(4.0/15.0);    //Convert the voltage to PSI
+//  compassData.PressureATM = compassData.PressurePSI*PSI_TO_ATM;                  //Convert PSI reading to ATM
+//  
   // Finally, OPC data
   OPCdata = SpsA.logUpdate();
   OPCdata += ",=," + SpsB.logUpdate();
@@ -133,13 +133,13 @@ void updateSensors() {
   printData();
 }
 
-//void updatePressure(){
-//
-//  // Read true temperature & Pressure
-//  baroTemp = baro.readTemperature();
-//  pressurePa = baro.readPressure();
-//
-//  // Calculate altitude
-//  pressureAltitude = baro.getAltitude(pressurePa, seaLevelPressure)*FEET_PER_METER;
-//  pressureRelativeAltitude = baro.getAltitude(pressurePa, baroReferencePressure)*FEET_PER_METER; 
-//}
+void updatePressure(){
+
+  // Read true temperature & Pressure
+  baroTemp = baro.readTemperature();
+  pressurePa = baro.readPressure();
+
+  // Calculate altitude
+  pressureAltitude = baro.getAltitude(pressurePa, seaLevelPressure)*FEET_PER_METER;
+  pressureRelativeAltitude = baro.getAltitude(pressurePa, baroReferencePressure)*FEET_PER_METER; 
+}

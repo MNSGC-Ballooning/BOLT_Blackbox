@@ -47,7 +47,6 @@
 #include <Arduino.h>                                                    //Arduino kit
 #include <SPS.h>                                                        //Library for SPS
 #include <SFE_MicroOLED.h>                                              //Library for OLED
-#include <Adafruit_MAX31856.h>                                          //Adafruit Library
 #include <LatchRelay.h>                                                 //Heater relay
 #include <Wire.h>                                                       //I2C library if the I2C mode in SPS is disabled
 #include <MS5611.h>
@@ -170,16 +169,6 @@ const int chipSelect = BUILTIN_SDCARD;
 //////////Environment Sensor Variables//////////
 ////////////////////////////////////////////////
 
-//Thermistor measurements
-float t1 = -127.00;                                                    //Temperature initialization values
-float t2 = -127.00;
-float Tinv1;                                                           // Intermediate temp values needed to calculate the actual tempurature
-float Tinv2;
-float adcVal1;
-float adcVal2;
-float logR1;
-float logR2;
-
 // active heating variables
 float sensTemp;
 bool coldSensor = false;
@@ -192,15 +181,15 @@ String sensorHeat_Status = "";
 //float pressurePSI;                                                     //PSI calculated from voltage
 //float pressureATM;                                                     //ATM calculated from PSI
 
-//// MS5611 Pressure Sensor Variables
-//MS5611 baro;
-//float seaLevelPressure;                                                   // in Pascals
-//float baroReferencePressure;                                              // some fun pressure/temperature readings below 
-//float baroTemp;                                                           // non-"raw" readings are in Pa for pressure, C for temp, meters for altitude
-//unsigned int pressurePa;
-//float pressureAltitude;
-//float pressureRelativeAltitude;
-//boolean baroCalibrated = false;                                           // inidicates if the barometer has been calibrated or not
+// MS5611 Pressure Sensor Variables
+MS5611 baro;
+float seaLevelPressure;                                                   // in Pascals
+float baroReferencePressure;                                              // some fun pressure/temperature readings below 
+float baroTemp;                                                           // non-"raw" readings are in Pa for pressure, C for temp, meters for altitude
+unsigned int pressurePa;
+float pressureAltitude;
+float pressureRelativeAltitude;
+boolean baroCalibrated = false;                                           // inidicates if the barometer has been calibrated or not
 
 //GPS
 UbloxGPS GPS(&UBLOX_SERIAL);
@@ -242,9 +231,9 @@ void setup() {
   Serial.println("GPS init!");
   delay(1000);
 
-//  initPressure();
-//  oledPrintAdd(oled, "PrsInit");
-//  Serial.println("Pressure init!");
+  initPressure();
+  oledPrintAdd(oled, "PrsInit");
+  Serial.println("Pressure init!");
 
   initRelays();                                                        //Initialize Relays
   oledPrintNew(oled, "RlyInit");

@@ -106,22 +106,26 @@ void initGPS(){
     gpsConnected = false;
   }
   Serial.println("GPS configured");
+
+  GPS.update();
+
+  compassData.locationData.alt = GPS.getAlt_feet();
 }
 
-//void initPressure() {
-//  if(!baro.begin())
-//  {
-//    Serial.println(F("Could not find a valid MS5611 sensor, check wiring!"));
-//  }
-//
-//  baroReferencePressure = baro.readPressure();                    // Get a reference pressure for relative altitude
-//
-//  Serial.println(F("MS5611 barometer setup successful..."));
-//
-//  updatePressure();
-//
-//  seaLevelPressure = baro.getSeaLevel(pressure, alt/FEET_PER_METER);
-//}
+void initPressure() {
+  if(!baro.begin())
+  {
+    Serial.println(F("Could not find a valid MS5611 sensor, check wiring!"));
+  }
+
+  baroReferencePressure = baro.readPressure();                    // Get a reference pressure for relative altitude
+
+  Serial.println(F("MS5611 barometer setup successful..."));
+
+  updatePressure();
+
+  seaLevelPressure = baro.getSeaLevel(pressurePa, compassData.locationData.alt/FEET_PER_METER);
+}
 
 
 void initRelays(){
