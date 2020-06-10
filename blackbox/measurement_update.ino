@@ -26,7 +26,7 @@ void updateSensors() {
   compassData.T2 = 1/compassData.T2-C2K;
 
   // Next, pressure
-  updatePressure();
+//  updatePressure();
 //  compassData.PressurePSI = analogRead(HONEYWELL_PRESSURE);                      //Read the analog pin
 //  compassData.PressurePSI = compassData.PressurePSI * (5.0/ADC_MAX);              //Convert the analog number to voltage
 //  compassData.PressurePSI = (compassData.PressurePSI - (0.1*5.0))/(4.0/15.0);    //Convert the voltage to PSI

@@ -57,12 +57,12 @@
 #define SENSOR_HEATER_ON 35                                             //Latching Relay pins for heaters
 #define SENSOR_HEATER_OFF 36
 #define HONEYWELL_PRESSURE A11                                          //Analog Honeywell Pressure Sensor
-#define THERMISTOR_A A18                                                //Chip Select pin for SPI for the thermocouples
+#define THERMISTOR_A A8                                                 //Chip Select pin for SPI for the thermocouples
 #define THERMISTOR_B A9
 //#define SD_A 9
 //#define SD_B 10
-#define UBLOX_SERIAL Serial1                                            //Serial Pins
-#define SPSA_SERIAL Serial4
+#define UBLOX_SERIAL Serial4                                            //Serial Pins
+#define SPSA_SERIAL Serial2
 #define SPSB_SERIAL Serial3                                           
 #define DATA_SERIAL Serial5                                         
 #define PIN_RESET 17                                                    //The library assumes a reset pin is necessary. The Qwiic OLED has RST hard-wired, so pick an arbitrarty IO pin that is not being used
@@ -73,7 +73,7 @@
 //Bauds
 #define DATA_BAUD 115200
 #define SPS_BAUD 115200
-#define UBLOX_BAUD 9600
+#define GPS_BAUD 9600
 
 //Data Transfer
 #define BEGIN 0x42
@@ -231,7 +231,7 @@ void setup() {
   Serial.println("GPS init!");
   delay(1000);
 
-  initPressure();
+  //initPressure();
   oledPrintAdd(oled, "PrsInit");
   Serial.println("Pressure init!");
 

@@ -94,7 +94,8 @@ void initData(){
 }
 
 void initGPS(){
-  UBLOX_SERIAL.begin(UBLOX_BAUD);                                       //initiate GPS
+  UBLOX_SERIAL.begin(GPS_BAUD);                                         //initiate GPS
+  delay(100);
   GPS.init();                                                           //Initiate GPS Data lines
 
   Serial.println("GPS begin");
@@ -103,7 +104,7 @@ void initGPS(){
     Serial.println("Airborne mode set!");
     gpsConnected = true;
   }else{
-    gpsConnected = false;
+    gpsConnected = true;
   }
   Serial.println("GPS configured");
 
