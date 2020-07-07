@@ -1,8 +1,16 @@
-//OLED functions
+///////////////////////////////////////////////
+////////// OLED on function ///////////////////
+///////////////////////////////////////////////
 void oledOn(MicroOLED &named){ named.command(DISPLAYON); }              //Turn on Display
-                                                                        
+
+///////////////////////////////////////////////
+////////// OLED off function //////////////////
+///////////////////////////////////////////////
 void oledOff(MicroOLED &named){ named.command(DISPLAYOFF); }            //Turn off Display
 
+/////////////////////////////////////////////////////////////
+////////// OLED print new string function ///////////////////
+/////////////////////////////////////////////////////////////
 void oledPrintNew(MicroOLED &named, String message){                    //Print new page
   named.clear(PAGE);
   named.setCursor(0, 0);
@@ -10,11 +18,17 @@ void oledPrintNew(MicroOLED &named, String message){                    //Print 
   named.display();
 }
 
+//////////////////////////////////////////////////////////
+////////// OLED Add to previous string ///////////////////
+//////////////////////////////////////////////////////////
 void oledPrintAdd(MicroOLED &named, String message){                    //Add to page
   named.print(message);
   named.display();
 }
 
+//////////////////////////////////////////////////
+////////// OLED update function //////////////////
+//////////////////////////////////////////////////
 void oledUpdate(){                                                      //Update screen
   if ((millis()>14400000)&&!finalMessage[1]){                           //Recovery screen
     oledOn(oled);

@@ -80,7 +80,7 @@ void closeFlightlog() {                                                 //Close 
   }
 }
 
-void printData(){
+void printData(){                                                       // Printing the data in a neat and orderly fashion. This is for debugging purposes. All of these will be logged onto the SD card
   Serial.println();
   Serial.println("Measurement Update");
   Serial.println("========================================================================================");

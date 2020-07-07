@@ -1,4 +1,6 @@
-//Initializations
+/////////////////////////////////////////////
+////////// Initialize OLED //////////////////
+/////////////////////////////////////////////
 void initOLED(MicroOLED& named){                                        //Initializes the OLED Screen
   delay(100);
   //Wire.begin();
@@ -16,6 +18,9 @@ void initOLED(MicroOLED& named){                                        //Initia
   delay(2000);
 }
 
+////////////////////////////////////////////////////
+////////// Initialize Data String //////////////////
+////////////////////////////////////////////////////
 void initData(){
 //  Serial.begin(9600);
   DATA_SERIAL.begin(DATA_BAUD);                                         //Data Transfer
@@ -71,7 +76,7 @@ void initData(){
 
   pinMode(chipSelect, OUTPUT);                                         //initialize SD card
   
-  while (!SD.begin(chipSelect)) {                                      //power LED will blink if no card is inserted
+  if (!SD.begin(chipSelect)) {                                      //power LED will blink if no card is inserted
     Serial.println("No SD");
     SDcard = false;
   }
@@ -93,6 +98,9 @@ void initData(){
   closeFlightlog();
 }
 
+////////////////////////////////////////////
+////////// Initialize GPS //////////////////
+////////////////////////////////////////////
 void initGPS(){
   UBLOX_SERIAL.begin(GPS_BAUD);                                         //initiate GPS
   delay(100);
@@ -113,6 +121,9 @@ void initGPS(){
   compassData.locationData.alt = GPS.getAlt_feet();
 }
 
+/////////////////////////////////////////////////
+////////// Initialize Pressure //////////////////
+/////////////////////////////////////////////////
 void initPressure() {
   if(!baro.begin())
   {
@@ -128,13 +139,19 @@ void initPressure() {
   seaLevelPressure = baro.getSeaLevel(pressurePa, compassData.locationData.alt/FEET_PER_METER);
 }
 
-
+///////////////////////////////////////////////
+////////// Initialize Relays //////////////////
+///////////////////////////////////////////////
 void initRelays(){
   sensorHeatRelay.init(false);                                          //Initialize relays
   
   sensorHeat_Status = "OFF";
 }
 
+
+////////////////////////////////////////////
+////////// Initialize GPS //////////////////
+////////////////////////////////////////////
 void initOPCs() {                                                       //Sets up serial and initializes the OPCs
   SPSB_SERIAL.begin(SPS_BAUD);
   SPSA_SERIAL.begin(SPS_BAUD);

@@ -5,7 +5,7 @@ void sendDataPacket(){
 
   outputData.checksum = 0;                           //Reset the checksum
   
-  outputData.packetNum++;                            //Did someone say - "update the system with data points equivalent to what was just logged locally?"
+  outputData.packetNum++;                            //Did someone say - "update the system with data points equivalent to what was just logged locally?" YES! I said that just now 6/12/1:52:27
   outputData.relTime = compassData.flightTime;
   outputData.hrs = compassData.locationData.hours;
   outputData.mins = compassData.locationData.minutes;
@@ -21,7 +21,7 @@ void sendDataPacket(){
 //  outputData.longs = 0;
 //  outputData.alts = 0;
   
-  outputData.t1 = compassData.T1;
+  outputData.t1 = compassData.T1;                   // Setting the output packet data structure. 
   outputData.t2 = compassData.T2;
   outputData.pressure = compassData.PressurePSI;
   outputData.A.hits = compassData.spsA_data_abv.hits;
@@ -39,7 +39,7 @@ void sendDataPacket(){
     
   memcpy(&outputBytes, &outputData, 79);               //Pass the packet to the output array as bytes
   
-  for (unsigned short i = 0; i < 79; i++){        //Calculate the checksum
+  for (unsigned short i = 0; i < 79; i++){        //Calculate the checksum this literally adds up the numbers contained within the bytes and checks if they are the same
     outputData.checksum += outputBytes[i];
   }
 
@@ -50,5 +50,5 @@ void sendDataPacket(){
   
   outputBytes[81] = outputData.stp;                         //Add the stop byte
       
-  DATA_SERIAL.write(outputBytes,82);                     //Send the data
+  Serial5.write(outputBytes,82);                     //Send the data
 }

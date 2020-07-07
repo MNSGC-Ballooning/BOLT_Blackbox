@@ -43,7 +43,7 @@ void updateSensors() {
 
   compassData.flightTime = millis();
 
-  if (gpsConnected){
+  if (gpsConnected){                                                                  // The if statement is to ensure that if the gps isnt connected, the values for its data are all zero
     compassData.locationData.latitude = GPS.getLat();
     compassData.locationData.longitude = GPS.getLon();
     compassData.locationData.alt = GPS.getAlt_feet();
@@ -81,6 +81,8 @@ void updateSensors() {
   compassData.spsB_data_abv.numberCount[2] = SpsB.SPSdata.nums[2];
   compassData.spsB_data_abv.numberCount[3] = SpsB.SPSdata.nums[3];
   compassData.spsB_data_abv.numberCount[4] = SpsB.SPSdata.nums[4];
+  compassData.PressureATM = baro.readPressure()*0.00000986923;
+  compassData.PressurePSI = compassData.PressureATM*1/PSI_TO_ATM;
   
   //////////////////////////////////////////////////////////////////
   ////////// UPDATING THE DATA STRING (called "data") //////////////
@@ -112,7 +114,7 @@ void updateSensors() {
 
   openFlightlog();
   delay(100); 
-  Flog.println(dataLine);                                                                    // Printing the data from A in the SD card
+  Flog.println(dataLine);                                                                   // Printing the data from A in the SD card
   closeFlightlog();
   
 //  openFlightlogA();
