@@ -1,13 +1,13 @@
 void actHeat(){  
   
-  if (compassData.T1 < -100) {
+  if (compassData.T1 < -90) {
     sensTemp = compassData.T2;
   } 
   else {
     sensTemp = compassData.T1;
   }
   
-  if(-100 < sensTemp && sensTemp < LOW_TEMP){
+  if(-90 < sensTemp && sensTemp < LOW_TEMP){
     coldSensor = true;                                              // Setting the coldsensor variable to true or false based on the temperature readings
   }
   if(sensTemp > HIGH_TEMP){

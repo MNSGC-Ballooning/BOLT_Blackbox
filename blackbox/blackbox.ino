@@ -1,7 +1,7 @@
 //============================================================================================================================================
 //MURI SPS Blackbox 
-//Calculator of Optically Measured Particles with an Autonomous SPS System (COMPASS)
-//Written by Nathan Pharis - phari009 Spring 2020
+//Compact Optical Measurement of Particles via an Autonomous SPS System (COMPASS)
+//Written by UMN MURI Spring/Summer 2020
 //============================================================================================================================================
 //
 //Version Description: SPS standalone configuration. Takes in 5V and outputs a serial string as noted in the BOLT campaign documentation.
@@ -61,7 +61,7 @@
 #define THERMISTOR_B A9
 //#define SD_A 9
 //#define SD_B 10
-#define UBLOX_SERIAL Serial4                                            //Serial Pins
+#define UBLOX_SERIAL Serial1                                            //Serial Pins
 #define SPSA_SERIAL Serial2
 #define SPSB_SERIAL Serial3                                           
 #define DATA_SERIAL Serial5                                         
