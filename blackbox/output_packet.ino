@@ -1,6 +1,6 @@
 //Function to generate the output packet
 void sendDataPacket(){
-  byte outputBytes[82];                              //Define output byte arrays
+  byte outputBytes[86];                              //Define output byte arrays
   byte checksumBytes[2];
 
   outputData.checksum = 0;                           //Reset the checksum
@@ -23,7 +23,8 @@ void sendDataPacket(){
   
   outputData.t1 = compassData.T1;                   // Setting the output packet data structure. 
   outputData.t2 = compassData.T2;
-  outputData.pressure = compassData.PressurePSI;
+  outputData.pressureMS = compassData.PressurePSI;
+  outputData.pressureANA = compassData.PressureAnalogPSI;
   outputData.A.hits = compassData.spsA_data_abv.hits;
   outputData.A.numberCount[0] = compassData.spsA_data_abv.numberCount[0];
   outputData.A.numberCount[1] = compassData.spsA_data_abv.numberCount[1];
@@ -37,18 +38,18 @@ void sendDataPacket(){
   outputData.B.numberCount[3] = compassData.spsB_data_abv.numberCount[3];
   outputData.B.numberCount[4] = compassData.spsB_data_abv.numberCount[4];
     
-  memcpy(&outputBytes, &outputData, 79);               //Pass the packet to the output array as bytes
+  memcpy(&outputBytes, &outputData, 83);               //Pass the packet to the output array as bytes
   
-  for (unsigned short i = 0; i < 79; i++){        //Calculate the checksum this literally adds up the numbers contained within the bytes and checks if they are the same
+  for (unsigned short i = 0; i < 83; i++){        //Calculate the checksum this literally adds up the numbers contained within the bytes and checks if they are the same
     outputData.checksum += outputBytes[i];
   }
 
   memcpy(&checksumBytes, &outputData.checksum, 2);    //Pass the checksum bytes to a staging array
   
-  outputBytes[79] = checksumBytes[0];             //Add the checksum to the output
-  outputBytes[80] = checksumBytes[1];
+  outputBytes[83] = checksumBytes[0];             //Add the checksum to the output
+  outputBytes[84] = checksumBytes[1];
   
-  outputBytes[81] = outputData.stp;                         //Add the stop byte
+  outputBytes[85] = outputData.stp;                         //Add the stop byte
       
-  Serial5.write(outputBytes,82);                     //Send the data
+  Serial5.write(outputBytes,86);                     //Send the data
 }

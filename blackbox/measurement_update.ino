@@ -83,6 +83,11 @@ void updateSensors() {
   compassData.spsB_data_abv.numberCount[4] = SpsB.SPSdata.nums[4];
   compassData.PressureATM = baro.readPressure()*0.00000986923;
   compassData.PressurePSI = compassData.PressureATM*1/PSI_TO_ATM;
+  Vout = analogRead(HONEYWELL_PRESSURE)/ADC_MAX*3.3;                      //Read the analog pin
+  PPSI = ((Vout-0.1*VSUP)*(PMAX-PMIN))/(0.8*VSUP)+PMIN;
+  PATM = PPSI*PSI_TO_ATM;
+  compassData.PressureAnalogPSI = PPSI;
+  compassData.PressureAnalogATM = PATM;
   
   //////////////////////////////////////////////////////////////////
   ////////// UPDATING THE DATA STRING (called "data") //////////////
@@ -101,11 +106,12 @@ void updateSensors() {
   else{
     dataLine += "Fix,";
   }
-
+  
   dataLine += (String(compassData.T1,4) + "," +String(compassData.T2,4) + ",");     //Data string population
   dataLine += (String(compassData.PressurePSI,6) + "," + String(compassData.PressureATM,6) + ",");
   dataLine += (compassData.sensorHeatStatus + ",");
-  dataLine += (",=," + OPCdata);
+  dataLine += (",=," + OPCdata + ",");
+  dataLine += (String(baroTemp,4) + "," + String(pressureAltitude,6));
   
   /////////////////////////////////////////////////////////////
   ///////////// Logging the data onto the SD card /////////////

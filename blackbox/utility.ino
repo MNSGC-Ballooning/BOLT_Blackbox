@@ -106,11 +106,17 @@ void printData(){                                                       // Print
   Serial.println("   t1       t2"); 
   Serial.println((String(compassData.T1,4) + ", " +String(compassData.T2,4)));
   Serial.println("------------------------------");
-  Serial.println("           Pressure");
+  Serial.println("           Pressure I2C SENSOR");
   Serial.print("Pressure(PSI): ");
   Serial.println(String(compassData.PressurePSI,6));
   Serial.print("Pressure(ATM): ");
   Serial.println(String(compassData.PressureATM,6));
+  Serial.println("------------------------------");
+  Serial.println("           Pressure ANALOG");
+  Serial.print("Pressure(PSI): ");
+  Serial.println(String(compassData.PressureAnalogPSI,6));
+  Serial.print("Pressure(ATM): ");
+  Serial.println(String(compassData.PressureAnalogATM,6));
   Serial.println("------------------------------");
   Serial.println("       System Statuses");
   Serial.print("Sensor Heater Relay: ");

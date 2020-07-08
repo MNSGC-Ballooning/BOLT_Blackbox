@@ -1,7 +1,7 @@
 //============================================================================================================================================
 //MURI SPS Blackbox 
-//Calculator of Optically Measured Particles with an Autonomous SPS System (COMPASS)
-//Written by Nathan Pharis - phari009 Spring 2020
+//Compact Optical Measurement of Particles via an Autonomous SPS System (COMPASS)
+//Written by UMN MURI Spring/Summer 2020
 //============================================================================================================================================
 //
 //Version Description: SPS standalone configuration. Takes in 5V and outputs a serial string as noted in the BOLT campaign documentation.
@@ -56,15 +56,16 @@
 ////////////////////////////////////
 #define SENSOR_HEATER_ON 35                                             //Latching Relay pins for heaters
 #define SENSOR_HEATER_OFF 36
-#define HONEYWELL_PRESSURE A11                                          //Analog Honeywell Pressure Sensor
+#define HONEYWELL_PRESSURE A7                                          //Analog Honeywell Pressure Sensor
 #define THERMISTOR_A A8                                                 //Analog pins for the thermistors
 #define THERMISTOR_B A9
 //#define SD_A 9
 //#define SD_B 10
-#define UBLOX_SERIAL Serial4                                            //Serial Pins (GPS Serial)
-#define SPSA_SERIAL Serial2                                             //SPSA Serial
-#define SPSB_SERIAL Serial3                                             //SPSB Serial
-#define DATA_SERIAL Serial5                                             //Data Serial
+#define UBLOX_SERIAL Serial1                                            //Serial Pins
+#define SPSA_SERIAL Serial2
+#define SPSB_SERIAL Serial3                                           
+#define DATA_SERIAL Serial5                                         
+
 #define PIN_RESET 17                                                    //The library assumes a reset pin is necessary. The Qwiic OLED has RST hard-wired, so pick an arbitrarty IO pin that is not being used
 
 //////////////////////////////
@@ -86,12 +87,15 @@
 #define DC_JUMPER 1                                                     //The DC_JUMPER is the I2C Address Select jumper. Set to 1 if the jumper is open (Default), or set to 0 if it's closed.
 #define NoFix 0x00                                                      // If the GPS doesn't get a fix, it should return this data bit and that's what NoFix is for
 #define Fix 0x01                                                        // Same thing as above, but this is if it gets a fix
-#define ADC_MAX 8196                                                    // The maximum adc value given to the thermistor, should be 8196 for a teensy and 1024 for an Arduino
+#define ADC_MAX 8196.0                                                    // The maximum adc value given to the thermistor, should be 8196 for a teensy and 1024 for an Arduino
 #define CONST_A 0.001125308852122                                       // A, B, and C are constants used for a 10k resistor and 10k thermistor for the steinhart-hart equation
 #define CONST_B 0.000234711863267                                       // NOTE: These values change when the thermistor and/or resistor change value, so if that happens, more research needs to be done on those constants
 #define CONST_C 0.000000085663516                                       
 #define CONST_R 10000                                                   // 10k Ω resistor 
 #define FEET_PER_METER 3.28084                                          // feet per meter
+#define VSUP 3.3
+#define PMAX 15.0
+#define PMIN 0.0
 
 //Control
 #define HIGH_TEMP 16                                                    //Thermal control, this is the high temperature in celcius
@@ -120,7 +124,7 @@ struct systemData{                                                      // Data 
   unsigned long flightTime;                                             // This is done to make the code more efficient and easier to read. ALL of our data lies under the compassData data structure
   gpsData locationData;                                                 // So if we ever need any data, we know that it is all contained within this one structure and don't have to worry about where to go
   float T1 = -127.00, T2 = -127.00;
-  float PressureATM, PressurePSI;
+  float PressureATM, PressurePSI, PressureAnalogPSI, PressureAnalogATM;
   spsData_abv spsA_data_abv,spsB_data_abv;
   bool sensorHeatStatus;
 }compassData;
@@ -130,7 +134,7 @@ struct outputPacket{                                                    // Data 
   uint16_t packetNum = 0;
   uint32_t relTime = millis();
   uint8_t hrs = 0, mins = 0, secs = 0;
-  float lats, longs, alts, t1, t2, pressure;
+  float lats, longs, alts, t1, t2, pressureMS, pressureANA;
   spsData_abv A,B;
   uint16_t checksum = 0;
   uint8_t stp = STOP;
@@ -180,6 +184,9 @@ String sensorHeat_Status = "";
 //float pressureSensorVoltage;                                             //Voltage calculated from analog number
 //float pressurePSI;                                                       //PSI calculated from voltage
 //float pressureATM;                                                       //ATM calculated from PSI
+float PPSI = 0;                                                     //PSI calculated from voltage
+float PATM = 0;  
+float Vout = 0;
 
 // MS5611 Pressure Sensor Variables
 MS5611 baro;
