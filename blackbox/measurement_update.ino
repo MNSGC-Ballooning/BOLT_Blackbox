@@ -33,8 +33,8 @@ void updateSensors() {
 //  compassData.PressureATM = compassData.PressurePSI*PSI_TO_ATM;                  //Convert PSI reading to ATM
 //  
   // Finally, OPC data
-  OPCdata = SpsA.logUpdate();
-  OPCdata += ",=," + SpsB.logUpdate();
+  OPCdata = (String(SpsA.getFanStatus()) + "," + SpsA.logUpdate());
+  OPCdata += (",=," + String(SpsB.getFanStatus()) + SpsB.logUpdate());
 
   //////////////////////////////////////////////////////////////////////////////////
   ///////////// UPDATING THE SYSTEM DATA STRUCT (called "compassData") /////////////

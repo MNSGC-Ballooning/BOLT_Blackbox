@@ -28,8 +28,8 @@ void initData(){
 
   String FHeader = "Flight Time, Minutes, Lat, Long, Altitude (ft), Date, Hour:Min:Sec, Satellites,Fix,ATemp (C),BTemp (C),Pressure (PSI),Pressure (ATM),";
   FHeader += "Sensor Heater Status,";
-  FHeader += "SPSA, " + SpsA.CSVHeader();
-  FHeader += ",SPSB, " + SpsB.CSVHeader();
+  FHeader += ("SPSA,A Fan," + SpsA.CSVHeader());
+  FHeader += (",SPSB,B Fan," + SpsB.CSVHeader());
 
 //  pinMode(SD_A, OUTPUT);                                                //initialize SD card
 //  
