@@ -161,7 +161,7 @@ String data;
 //boolean SDcardB = true;
 //static boolean FlightlogOpenB = false;                                   //SD for Flight Computer
 
-//SDClass SD;
+SDClass SD;
 File Flog;                                                                 //Variables needed to establish the flight log
 static String dataLine;
 String Fname = "";
@@ -224,7 +224,7 @@ void setup() {
   SPI.begin();                                                         // Beginning the SPI and wire libraries and the serial monitor
   Wire.begin();
   Serial.begin(9600);
-  Serial5.begin(9600);
+  Serial5.begin(115200);
 
   Serial.println("Beginning Initialization cycle!");
   initOLED(oled);                                                      //Initialize OLED Screen

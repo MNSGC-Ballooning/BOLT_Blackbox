@@ -76,7 +76,7 @@ void initData(){
 
   pinMode(chipSelect, OUTPUT);                                         //initialize SD card
   
-  if (!SD.begin(chipSelect)) {                                      //power LED will blink if no card is inserted
+  while (!SD.begin(chipSelect)) {                                      //power LED will blink if no card is inserted
     Serial.println("No SD");
     SDcard = false;
   }
