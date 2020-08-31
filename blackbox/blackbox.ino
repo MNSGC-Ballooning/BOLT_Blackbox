@@ -134,7 +134,7 @@ struct outputPacket{                                                    // Data 
   uint16_t packetNum = 0;
   uint32_t relTime = millis();
   uint8_t hrs = 0, mins = 0, secs = 0;
-  float lats, longs, alts, t1, t2, pressureMS, pressureANA;
+  float lats, longs, alts, t1, t2, pressureANA, pressureMS;
   spsData_abv A,B;
   uint16_t checksum = 0;
   uint8_t stp = STOP;
